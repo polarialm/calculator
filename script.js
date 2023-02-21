@@ -116,6 +116,10 @@ we need to store the number and the operator onto opStore
 Then, when the users clicks on another number and then on equal, we store the number onto opStore 
 and pass it to operate() */
 
+function round (number) {
+    return Math.floor(number*1000)/1000
+}
+
 const opButtons = calcOps.querySelectorAll('button')
 
 opButtons.forEach((button) => {
@@ -126,7 +130,8 @@ opButtons.forEach((button) => {
                     if (opStore.length >= 2) {
                         opStore.push(Numbero)
                     }
-                    calcDisplay.textContent = operate(opStore)
+                    let result = round(operate(opStore))
+                    calcDisplay.textContent = result
                     Numbero = calcDisplay.textContent
                     opStore = []
                     break;
