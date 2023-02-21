@@ -85,9 +85,6 @@ const numButtons = calcNums.querySelectorAll('button')
 
 numButtons.forEach((button) => {
     button.addEventListener('click', () => {
-        if (opStore.length >= 2) {
-            opStore.push(button.textContent)
-        }
         updateDisplay(button.textContent)
     })
 })
@@ -126,6 +123,9 @@ opButtons.forEach((button) => {
         if (button.textContent === 'clear' || button.textContent === '=') {
             switch (button.textContent) {
                 case '=':
+                    if (opStore.length >= 2) {
+                        opStore.push(Numbero)
+                    }
                     calcDisplay.textContent = operate(opStore)
                     Numbero = calcDisplay.textContent
                     opStore = []
