@@ -120,6 +120,14 @@ function round (number) {
     return Math.floor(number*1000)/1000
 }
 
+function divideByZero (array) {
+    if (array[1] === '/'  && array[2] === '0') {
+        return false
+    }
+}
+
+
+
 const opButtons = calcOps.querySelectorAll('button')
 
 opButtons.forEach((button) => {
@@ -130,6 +138,10 @@ opButtons.forEach((button) => {
                     if (opStore.length >= 2) {
                         opStore.push(Numbero)
                     }
+                    if (divideByZero(opStore) === false) {
+                        alert('No.')
+                        return false
+                    }
                     let result = round(operate(opStore))
                     calcDisplay.textContent = result
                     Numbero = calcDisplay.textContent
@@ -137,14 +149,32 @@ opButtons.forEach((button) => {
                     break;
                 case 'clear':
                     clearDisplay()
+                    opStore = []
+                    Numbero = ""
                     break;
                 default: 
                     alert("this shouldn't happen")
             }
         } else {
-            opStore.push(calcDisplay.textContent)
-            opStore.push(button.textContent)
-            Numbero = ""
+            if (opStore.length >= 2) {
+                opStore.push(Numbero)
+                if (divideByZero(opStore) === false) {
+                    alert('No.')
+                    return false
+                }
+                let result = round(operate(opStore))
+                calcDisplay.textContent = result
+                Numbero = calcDisplay.textContent
+                opStore = []
+                opStore.push(calcDisplay.textContent)
+                opStore.push(button.textContent)
+                Numbero = ""
+            } else {
+                opStore.push(calcDisplay.textContent)
+                opStore.push(button.textContent)
+                Numbero = ""
+            }
+            
         }
     })
 }) // Need to make the calculator do the operation when the user clicks "equals"
