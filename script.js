@@ -44,6 +44,7 @@ function operate (array) {
 
 
 const calcNums = document.querySelector('.calc-nums')
+const calcDisplay = document.querySelector('.calc-screen')
 
 for (i = 0; i <= 10; i++) {
     if (i <= 9) {
@@ -54,6 +55,7 @@ for (i = 0; i <= 10; i++) {
     const button = document.createElement('button')
     button.textContent = '.'
     calcNums.appendChild(button)
+    
     }
 }
 
@@ -82,16 +84,19 @@ function initOpButtons () {
 }
 
 const numButtons = calcNums.querySelectorAll('button')
+const nbutArr = Array.from(numButtons)
+
 
 numButtons.forEach((button) => {
     button.addEventListener('click', () => {
         updateDisplay(button.textContent)
+        disableDot(nbutArr) // finish this!
     })
 })
 
 let Numbero = ""
 
-const calcDisplay = document.querySelector('.calc-screen')
+
 
 function updateDisplay (number) {
     Numbero = Numbero + number
@@ -101,6 +106,23 @@ function updateDisplay (number) {
 function clearDisplay () {
     Numbero = ""
     calcDisplay.textContent = Numbero
+}
+
+function disableDot (button) {
+    let num = []
+    num = calcDisplay.textContent.split('')
+    for (let i = 0; i < num.length; i++) {
+        if (num[i] === '.') {
+            button[10].classList.add('disabled')
+            return 0
+        } else button[10].classList.remove('disabled')
+    }
+}
+
+function hasDot (button) {
+    if (button.classList.contains('disabled') === false) {
+        button.classList.remove('disabled')
+    } 
 }
 
 
@@ -135,6 +157,7 @@ opButtons.forEach((button) => {
         if (button.textContent === 'clear' || button.textContent === '=') {
             switch (button.textContent) {
                 case '=':
+                    hasDot(nbutArr[10])
                     if (opStore.length >= 2) {
                         opStore.push(Numbero)
                     }
