@@ -156,7 +156,10 @@ document.addEventListener("keydown", (key) => {
     console.log(key.key)
     if (key.key === 'Backspace') {
         updateDisplay(key.key)
-    } else {
+    } else if (key.key === 'Shift') {
+        key.preventDefault()
+    }
+     else {
         pickAThing(key.key)
     }
 })
