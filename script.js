@@ -277,52 +277,9 @@ function divideByZero (array) {
 
 const opButtons = calcOps.querySelectorAll('button')
 
+
 opButtons.forEach((button) => {
     button.addEventListener('click', () => {
-        if (button.textContent === 'clear' || button.textContent === '=') {
-            switch (button.textContent) {
-                case '=':
-                    hasDot(nbutArr[10])
-                    if (opStore.length >= 2) {
-                        opStore.push(Numbero)
-                    }
-                    if (divideByZero(opStore) === false) {
-                        alert('No.')
-                        return false
-                    }
-                    let result = round(operate(opStore))
-                    calcDisplay.textContent = result
-                    Numbero = calcDisplay.textContent
-                    opStore = []
-                    break;
-                case 'clear':
-                    clearDisplay()
-                    opStore = []
-                    Numbero = ""
-                    break;
-                default: 
-                    alert("this shouldn't happen")
-            }
-        } else {
-            if (opStore.length >= 2) {
-                opStore.push(Numbero)
-                if (divideByZero(opStore) === false) {
-                    alert('No.')
-                    return false
-                }
-                let result = round(operate(opStore))
-                calcDisplay.textContent = result
-                Numbero = calcDisplay.textContent
-                opStore = []
-                opStore.push(calcDisplay.textContent)
-                opStore.push(button.textContent)
-                Numbero = ""
-            } else {
-                opStore.push(calcDisplay.textContent)
-                opStore.push(button.textContent)
-                Numbero = ""
-            }
-            
-        }
+        pickAThing(button.textContent)
     })
 }) // Need to make the calculator do the operation when the user clicks "equals"
