@@ -202,8 +202,9 @@ function pickAThing(choice) {
                 disableDot(nbutArr)
             }
         } else {
-            if (choice === 'clear' || choice === '=') {
+            if (choice === 'clear' || choice === '=' || choice === 'Enter') {
                 switch (choice) {
+                    case 'Enter':
                     case '=':
                         hasDot(nbutArr[10])
                         if (opStore.length >= 2) {
