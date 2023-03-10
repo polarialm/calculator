@@ -46,51 +46,82 @@ function operate (array) {
 const calcNums = document.querySelector('.calc-nums')
 const calcDisplay = document.querySelector('.calc-screen')
 
-for (i = 0; i <= 10; i++) {
-    if (i <= 9) {
-    const button = document.createElement('button')
-    button.textContent = i
-    calcNums.appendChild(button)
+let n = 0;
+for (let i=0; i < 4; i++) {
+    const row = document.createElement('div')
+    row.classList.add('calc-num-rows')
+    calcNums.appendChild(row)
+    if (n < 9) {
+        for (let x=0; x<3; x++) {
+            const button = document.createElement('button')
+            button.textContent = n
+            row.appendChild(button)
+            n++
+        }
     } else {
-    const button = document.createElement('button')
-    button.textContent = '.'
-    calcNums.appendChild(button)
-    
+        for (let y=0; y<=2; y++) {
+            const button = document.createElement('button')
+            /*if (y === 0) {
+                button.textContent = n
+                button.setAttribute('id', 'calc-nine')
+            } else button.textContent = '.'*/
+            switch (y) {
+                case 0:
+                    button.textContent = n
+                    button.setAttribute('id', 'calc-nine')
+                    break;
+                case 1:
+                    button.textContent = '.'
+                    break;
+                case 2:
+                    button.textContent = '←'
+                    break;
+            }
+            row.appendChild(button)
+            
+        }
     }
 }
 
+const operations = ['+', '-', '*', '/', 'clear', '=']
 
 const calcOps = document.querySelector('.calc-ops')
 initOpButtons()
 function initOpButtons () {
-    const add = document.createElement('button')
-    add.textContent = '+'
-    const subtract = document.createElement('button')
-    subtract.textContent = '-'
-    const multi = document.createElement('button')
-    multi.textContent = '*'
-    const divide = document.createElement('button')
-    divide.textContent = '/'
-    const clear = document.createElement('button')
-    clear.textContent = 'clear'
-    const equals = document.createElement('button')
-    equals.textContent = '='
-    calcOps.appendChild(add)
-    calcOps.appendChild(subtract)
-    calcOps.appendChild(multi)
-    calcOps.appendChild(divide)
-    calcOps.appendChild(clear)
-    calcOps.appendChild(equals)
+    let n = 0;
+    for (let i = 0; i < 3; i++) {
+        const row = document.createElement('div')
+        row.classList.add('calc-op-rows')
+        calcOps.appendChild(row)
+        for (let x = 0; x < 2; x++) {
+            const button = document.createElement('button')
+            button.textContent = operations[n]
+            row.appendChild(button)
+            n++
+        }
+    }
 }
 
+/*
+function initOpButtons () {
+    for (let i=0; i < operations.length; i++) {
+        const button = document.createElement('button')
+        button.textContent = operations[i]
+        calcOps.appendChild(button)
+    }
+}*/ 
 const numButtons = calcNums.querySelectorAll('button')
 const nbutArr = Array.from(numButtons)
 
 
 numButtons.forEach((button) => {
     button.addEventListener('click', () => {
-        updateDisplay(button.textContent)
-        disableDot(nbutArr) // finish this!
+        if (button.textContent === '←') {
+            updateDisplay(button.textContent)
+        } else {
+            updateDisplay(button.textContent)
+            disableDot(nbutArr)
+        }
     })
 })
 
@@ -99,14 +130,43 @@ let Numbero = ""
 
 
 function updateDisplay (number) {
-    Numbero = Numbero + number
-    calcDisplay.textContent = Numbero
+    if (number !== '←' && number !== 'Backspace') {
+        Numbero = Numbero + number
+        calcDisplay.textContent = Numbero
+    } else {
+        let scrArr = []
+        scrArr = calcDisplay.textContent.split('')
+        if (scrArr.length < 2) {
+            clearDisplay()
+        } else {
+            scrArr.pop()
+            let result = ""
+            for(i = 0; i < scrArr.length; i++) {
+                result = result.concat(scrArr[i])
+            }
+            Numbero = result
+            calcDisplay.textContent = Numbero
+        }
+
+    }
+
 }
+
+document.addEventListener("keydown", (key) => {
+    console.log(key.key)
+    if (key.key === 'Backspace') {
+        updateDisplay(key.key)
+    } else {
+        pickAThing(key.key)
+    }
+})
 
 function clearDisplay () {
     Numbero = ""
-    calcDisplay.textContent = Numbero
+    calcDisplay.textContent = 0
 }
+
+let isDisabled = 0
 
 function disableDot (button) {
     let num = []
@@ -114,8 +174,12 @@ function disableDot (button) {
     for (let i = 0; i < num.length; i++) {
         if (num[i] === '.') {
             button[10].classList.add('disabled')
+            isDisabled++
             return 0
-        } else button[10].classList.remove('disabled')
+        } else {
+            button[10].classList.remove('disabled')
+            isDisabled = 0
+        }     
     }
 }
 
@@ -125,6 +189,67 @@ function hasDot (button) {
     } 
 }
 
+function pickAThing(choice) {
+    if (Number.isNaN(Number(choice))) {
+        if (choice === '.') {
+            if (isDisabled > 0) {
+                return false;
+            } else {
+                updateDisplay(choice)
+                disableDot(nbutArr)
+            }
+        } else {
+            if (choice === 'clear' || choice === '=') {
+                switch (choice) {
+                    case '=':
+                        hasDot(nbutArr[10])
+                        if (opStore.length >= 2) {
+                            opStore.push(Numbero)
+                        }
+                        if (divideByZero(opStore) === false) {
+                            alert('No.')
+                            return false
+                        }
+                        let result = round(operate(opStore))
+                        calcDisplay.textContent = result
+                        Numbero = calcDisplay.textContent
+                        opStore = []
+                        break;
+                    case 'clear':
+                        clearDisplay()
+                        opStore = []
+                        Numbero = ""
+                        break;
+                    default: 
+                        alert("this shouldn't happen")
+                }
+            } else {
+                if (opStore.length >= 2) {
+                    opStore.push(Numbero)
+                    if (divideByZero(opStore) === false) {
+                        alert('No.')
+                        return false
+                    }
+                    let result = round(operate(opStore))
+                    calcDisplay.textContent = result
+                    Numbero = calcDisplay.textContent
+                    opStore = []
+                    opStore.push(calcDisplay.textContent)
+                    opStore.push(choice)
+                    Numbero = ""
+                } else {
+                    opStore.push(calcDisplay.textContent)
+                    opStore.push(choice)
+                    Numbero = ""
+                }
+                
+            }
+        }
+    } else {
+        updateDisplay(choice)
+        disableDot(nbutArr)
+    }
+}
 
 let opStore = []
 
