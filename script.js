@@ -61,10 +61,6 @@ for (let i=0; i < 4; i++) {
     } else {
         for (let y=0; y<=2; y++) {
             const button = document.createElement('button')
-            /*if (y === 0) {
-                button.textContent = n
-                button.setAttribute('id', 'calc-nine')
-            } else button.textContent = '.'*/
             switch (y) {
                 case 0:
                     button.textContent = n
@@ -102,14 +98,6 @@ function initOpButtons () {
     }
 }
 
-/*
-function initOpButtons () {
-    for (let i=0; i < operations.length; i++) {
-        const button = document.createElement('button')
-        button.textContent = operations[i]
-        calcOps.appendChild(button)
-    }
-}*/ 
 const numButtons = calcNums.querySelectorAll('button')
 const nbutArr = Array.from(numButtons)
 
@@ -257,15 +245,6 @@ function pickAThing(choice) {
 
 let opStore = []
 
-// First a user clicks a number
-// Then the user clicks a operator
-// Then they click another number
-// Then they click =
-
-/* When the user clicks on a number and then a operator
-we need to store the number and the operator onto opStore
-Then, when the users clicks on another number and then on equal, we store the number onto opStore 
-and pass it to operate() */
 
 function round (number) {
     return Math.floor(number*1000)/1000
@@ -286,4 +265,4 @@ opButtons.forEach((button) => {
     button.addEventListener('click', () => {
         pickAThing(button.textContent)
     })
-}) // Need to make the calculator do the operation when the user clicks "equals"
+}) 
